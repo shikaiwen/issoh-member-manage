@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.issohadmin.memberarrange.mapper.IssohMemberArrangeMapper">
+
+
+
+    <select id="mySelectPage" resultType="org.jeecg.modules.issohadmin.memberarrange.vo.IssohMemberArrangeVo">
+
+        select a.*,
+        b.name as project_name,
+        c.id as company_id,
+        c.name as company_name
+
+        from issoh_member_arrange a
+        left join issoh_projects b on a.project_id = b.id
+        left join issoh_company c on b.company_id = c.id
+
+        where 1=1
+
+
+
+
+
+        ${ew.customSqlSegment}
+
+
+    </select>
+
+</mapper>

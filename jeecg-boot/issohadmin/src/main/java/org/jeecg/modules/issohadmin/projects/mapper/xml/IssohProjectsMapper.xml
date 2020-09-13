@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.issohadmin.projects.mapper.IssohProjectsMapper">
+
+
+    <select id="mySelectPage" resultType="org.jeecg.modules.issohadmin.projects.vo.IssohProjectsVo">
+
+        select a.*,
+        b.name as company_name,
+        c.name as contactor_name
+
+        from issoh_projects a
+
+        left join issoh_company b on a.company_id = b.id
+        left join issoh_contactor c on a.contactor_id = c.id
+
+        where 1=1
+
+        <if test="extraParam.companyName != null ">
+            and b.name like concat('%', #{extraParam.companyName} ,'%')
+        </if>
+
+        <if test="extraParam.contactorName != null ">
+            and c.name like concat('%', #{extraParam.contactorName} ,'%')
+        </if>
+
+
+        ${ew.customSqlSegment}
+
+
+    </select>
+
+
+
+</mapper>

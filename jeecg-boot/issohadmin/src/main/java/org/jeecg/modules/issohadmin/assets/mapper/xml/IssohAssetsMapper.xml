@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.issohadmin.assets.mapper.IssohAssetsMapper">
+
+
+
+    <select id="mySelectPage" resultType="org.jeecg.modules.issohadmin.assets.entity.IssohAssets">
+        select a.*,b.create_by, b.realname from issoh_assets a left join sys_user b on a.create_by = b.username
+
+        where 1=1
+
+        <if test="extraParam.realname != null ">
+            and b.realname like concat('%', #{extraParam.realname} ,'%')
+        </if>
+
+
+        ${ew.customSqlSegment}
+
+
+    </select>
+</mapper>
