@@ -8,16 +8,19 @@
 
         select a.*,
         b.name as project_name,
+        e.real_name as member_name,
         c.id as company_id,
-        c.name as company_name
+        c.name as company_name,
+        d.real_name as charger_name
 
         from issoh_member_arrange a
         left join issoh_projects b on a.project_id = b.id
         left join issoh_company c on b.company_id = c.id
+        left join issoh_member d on a.charger_id = d.id
+
+        left join issoh_member e on a.member_id = e.id
 
         where 1=1
-
-
 
 
 

@@ -162,10 +162,16 @@
             title:'社員名前',
             align:"center",
             dataIndex: 'memberName',
-            width:120,
+            width:100,
           },
           {
-            title:'プロジェクト名',
+            title:'営業担当',
+            align:"center",
+            dataIndex: 'chargerName',
+            width:100,
+          },
+          {
+            title:'案件名',
             align:"center",
             dataIndex: 'projectName',
             ellipsis: true,

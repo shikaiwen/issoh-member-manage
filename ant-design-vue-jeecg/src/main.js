@@ -17,6 +17,8 @@ import Print from 'vue-print-nb-jeecg'
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 
+import * as VueGoogleMaps from 'vue2-google-maps'
+
 // require('@jeecg/antd-online-beta220')
 require('@jeecg/antd-online-beta220/dist/OnlineForm.css')
 
@@ -54,6 +56,21 @@ Vue.use(preview)
 Vue.use(vueBus);
 Vue.use(JeecgComponents);
 Vue.use(VueAreaLinkage);
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyAOvK5GaadDM1YnVpSIwBHdElurgwCxfCg',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+    //// If you want to set the version, you can do so:
+    // v: '3.26',
+    region: 'jp',
+    language: 'ja',
+  },
+  installComponents: true
+})
 
 new Vue({
   router,

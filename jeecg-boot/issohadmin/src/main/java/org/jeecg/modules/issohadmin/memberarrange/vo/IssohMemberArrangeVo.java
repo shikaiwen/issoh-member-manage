@@ -14,9 +14,15 @@ import java.io.Serializable;
 @Data
 public class IssohMemberArrangeVo extends IssohMemberArrange implements Serializable {
 
+//    案件名
     private String projectName;
+
+    private String memberName;
 
     private String companyId;
     private String companyName;
+
+//    我が社営業担当
+    private String chargerName;
 
 }

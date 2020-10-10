@@ -1,17 +1,44 @@
 <template>
   <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
+
+
+   <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="社員名前">
+              <a-input placeholder="请输入社員名前" v-model="queryParam.realName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="10" :lg="11" :md="12" :sm="24">
+            <a-form-item label="生年月日">
+              <j-date placeholder="生年月日開始" class="query-group-cust" v-model="queryParam.birthday_begin"></j-date>
+              <span class="query-group-split-cust"></span>
+              <j-date placeholder="生年月日終了" class="query-group-cust" v-model="queryParam.birthday_end"></j-date>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
+
+
     <!-- 查询区域-END -->
     
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="showMemberMap" type="primary" icon="plus">社員マップ</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('社員')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -84,6 +111,7 @@
     </div>
 
     <issohMember-modal ref="modalForm" @ok="modalFormOk"></issohMember-modal>
+    <issohMember-map ref="modalMap"></issohMember-map>
   </a-card>
 </template>
 
@@ -94,12 +122,16 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import IssohMemberModal from './modules/IssohMemberModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import JDate from '@/components/jeecg/JDate.vue'
+  import IssohMemberMap from './modules/IssohMemberMap'
 
   export default {
     name: "IssohMemberList",
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      IssohMemberModal
+      IssohMemberModal,
+      JDate,
+      IssohMemberMap
     },
     data () {
       return {
@@ -151,6 +183,15 @@
               return !text?"":(text.length>10?text.substr(0,10):text)
             }
           },
+          {
+            title:'住所',
+            align:"center",
+            dataIndex: 'address',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+
           {
             title:'在留カード',
             align:"center",
@@ -211,6 +252,9 @@
       },
     },
     methods: {
+      showMemberMap(){
+        this.$refs.modalMap.add()
+      },
       initDictConfig(){
       }
     }

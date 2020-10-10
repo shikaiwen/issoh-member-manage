@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
+import org.jeecg.modules.issohadmin.memberarrange.vo.IssohMemberArrangeVo;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -72,10 +73,8 @@ public class IssohMemberArrangeController extends JeecgController<IssohMemberArr
 								   HttpServletRequest req) {
 		QueryWrapper<IssohMemberArrange> queryWrapper = QueryGenerator.initQueryWrapper(issohMemberArrange, req.getParameterMap());
 		Page<IssohMemberArrange> page = new Page<IssohMemberArrange>(pageNo, pageSize);
-//		IPage<IssohMemberArrange> pageList = issohMemberArrangeService.page(page, queryWrapper);
-
-		Page<IssohMemberArrange> pageList = mapper.mySelectPage(page, queryWrapper, Collections.emptyMap());
-
+		Page<IssohMemberArrangeVo> pageList = mapper.mySelectPage(page, queryWrapper, Collections.emptyMap());
+//		System.out.println("99898989");
 		return Result.ok(pageList);
 	}
 	
@@ -103,7 +102,11 @@ public class IssohMemberArrangeController extends JeecgController<IssohMemberArr
 	@ApiOperation(value="入場情報-编辑", notes="入場情報-编辑")
 	@PutMapping(value = "/edit")
 	public Result<?> edit(@RequestBody IssohMemberArrange issohMemberArrange) {
+		String chargerId = issohMemberArrange.getChargerId();
+		System.out.println(chargerId);
 		issohMemberArrangeService.updateById(issohMemberArrange);
+		System.out.println("1");
+
 		return Result.ok("编辑成功!");
 	}
 	

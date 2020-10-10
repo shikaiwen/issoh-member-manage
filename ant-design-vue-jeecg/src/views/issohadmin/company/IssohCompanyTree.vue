@@ -1,6 +1,6 @@
 <template>
   <a-row :gutter="18">
-    <a-col :md="8" :sm="24">
+    <a-col :md="5" :sm="24">
       <a-card :bordered="false">
         <div style="background: #fff;padding-left:16px;height: 100%; margin-top: 5px">
           <a-input-search @search="onSearch" style="width:100%;margin-top: 10px" placeholder="请输入部门名称"/>
@@ -23,12 +23,12 @@
         </div>
       </a-card>
     </a-col>
-    <a-col :md="16" :sm="24">
+    <a-col :md="19" :sm="24">
       <a-card :bordered="false">
         <a-tabs defaultActiveKey="2" @change="callback">
-          <a-tab-pane tab="用户信息" key="1">
+          <!-- <a-tab-pane tab="用户信息" key="1">
             <Dept-User-Info ref="DeptUserInfo" @clearSelectedDepartKeys="clearSelectedDepartKeys"></Dept-User-Info>
-          </a-tab-pane>
+          </a-tab-pane> -->
           <a-tab-pane tab="社員情報" key="2">
             <Issoh-Company-Member-List :disableMixinCreated="true" ref="IssohCompanyMemberList" @clearSelectedDepartKeys="clearSelectedDepartKeys"></Issoh-Company-Member-List>
           </a-tab-pane>

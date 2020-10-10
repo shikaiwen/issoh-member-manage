@@ -130,11 +130,13 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import IssohProjectsModal from './modules/IssohProjectsModal'
 
+
   export default {
     name: "IssohProjectsList",
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      IssohProjectsModal
+      IssohProjectsModal,
+      
     },
     data () {
       return {
@@ -152,7 +154,7 @@
             }
           },
           {
-            title:'プロジェクト名',
+            title:'案件名',
             align:"center",
             dataIndex: 'name',
             width:200,
@@ -197,7 +199,7 @@
             // dataIndex: 'companyId'
           },
           {
-            title:'案件担当者',
+            title:'案件営業担当',
             align:"center",
             dataIndex: 'contactorName'
             // dataIndex: 'contactorId'

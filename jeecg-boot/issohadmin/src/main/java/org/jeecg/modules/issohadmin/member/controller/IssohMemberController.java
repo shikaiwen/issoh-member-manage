@@ -11,11 +11,14 @@ import java.net.URLDecoder;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.issohadmin.assets.entity.IssohAssets;
 import org.jeecg.modules.issohadmin.assets.mapper.IssohAssetsMapper;
+import org.jeecg.modules.issohadmin.component.MapService;
 import org.jeecg.modules.issohadmin.member.entity.IssohMember;
 import org.jeecg.modules.issohadmin.member.mapper.IssohMemberMapper;
 import org.jeecg.modules.issohadmin.member.service.IIssohMemberService;
@@ -59,6 +62,31 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 	 @Resource
 	 IssohMemberMapper issohMemberMapper;
 
+	 @Resource
+	 MapService mapService;
+
+	 @GetMapping(value = "/loadMemberForGoogleMap")
+	 @ResponseBody
+	 public Object loadMemberForMap() {
+		 QueryWrapper<IssohMember> queryWrapper = new QueryWrapper<>();
+		 List<IssohMember> issohMembers = issohMemberMapper.selectList(queryWrapper);
+		 issohMembers = issohMembers.stream().filter(m -> m.getAddressLat() != null).collect(Collectors.toList());
+		return Result.ok(issohMembers);
+	 }
+
+
+	 @GetMapping(value = "/searchMember")
+	 @ResponseBody
+	 public Object searchMember(IssohMember issohMember,@RequestParam String q, HttpServletRequest request) {
+		 QueryWrapper<IssohMember> queryWrapper = new QueryWrapper<>();
+//		 QueryGenerator.initQueryWrapperAlias(issohMember, request.getParameterMap(),queryWrapper);
+
+		 queryWrapper.like("real_name",q);
+		 List<IssohMember> issohMembers = issohMemberMapper.selectList(queryWrapper);
+//		 issohMembers = issohMembers.stream().filter(m -> m.getAddressLat() != null).collect(Collectors.toList());
+		 return Result.ok(issohMembers);
+	 }
+
 	/**
 	 * 分页列表查询
 	 *
@@ -80,9 +108,6 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 //		Page<IssohMember> page = new Page<IssohMember>(pageNo, pageSize);
 //		IPage<IssohMember> pageList = issohMemberService.page(page, queryWrapper);
 
-
-
-
 		QueryWrapper<IssohMember> queryWrapper = new QueryWrapper<>();
 		queryWrapper.setTableAlias("a");
 
@@ -97,7 +122,8 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 		System.out.println(JSON.toJSONString(pageList, true));
 		return Result.ok(pageList);
 	}
-	
+
+
 	/**
 	 *   添加
 	 *
@@ -108,6 +134,8 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 	@ApiOperation(value="社員-添加", notes="社員-添加")
 	@PostMapping(value = "/add")
 	public Result<?> add(@RequestBody IssohMember issohMember) {
+
+		mapService.fillIssohMemberAddress(issohMember);
 		issohMemberService.save(issohMember);
 		return Result.ok("添加成功！");
 	}
@@ -122,6 +150,7 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 	@ApiOperation(value="社員-编辑", notes="社員-编辑")
 	@PutMapping(value = "/edit")
 	public Result<?> edit(@RequestBody IssohMember issohMember) {
+		mapService.fillIssohMemberAddress(issohMember);
 		issohMemberService.updateById(issohMember);
 		return Result.ok("编辑成功!");
 	}

@@ -106,4 +106,13 @@ public class IssohMember implements Serializable {
 
 	private String companyId;
 
+    @Excel(name = "住所", width = 15)
+    @ApiModelProperty(value = "住所")
+    private java.lang.String address;
+
+//    経度
+    private Double addressLat;
+//    緯度
+    private Double addressLng;
+
 }

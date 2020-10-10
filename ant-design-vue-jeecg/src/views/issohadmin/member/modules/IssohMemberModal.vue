@@ -26,6 +26,11 @@
         <a-form-item label="生年月日" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择生年月日" v-decorator="['birthday', validatorRules.birthday]" :trigger-change="true" style="width: 100%"/>
         </a-form-item>
+
+        <a-form-item label="住所" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-input v-decorator="['address']" placeholder="住所..."></a-input>
+        </a-form-item>
+
         <a-form-item label="在留カード" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="['zaiCardImg']" placeholder="请输入在留カード"></a-input>
         </a-form-item>
@@ -160,7 +165,7 @@
         // 触发表单验证
         this.form.validateFields((err, values) => {
           if (!err) {
-            that.confirmLoading = true;
+            // that.confirmLoading = true;
             let httpurl = '';
             let method = '';
             if(!this.model.id){
@@ -173,6 +178,7 @@
             let formData = Object.assign(this.model, values);
             formData.companyId = formData.departIds;
             console.log("表单提交数据",formData)
+            
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
                 that.$message.success(res.message);

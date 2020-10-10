@@ -12,7 +12,12 @@
       <a-form :form="form">
 
         <a-form-item label="社員名前" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="['memberName', validatorRules.memberName]" placeholder="请输入社員名前"></a-input>
+          <!-- <a-input v-decorator="['memberName', validatorRules.memberName]" placeholder="请输入社員名前"></a-input> -->
+          <!-- <member-pop v-decorator="['memberId',validatorRules.memberName]"
+          :initVal="model.memberName" 
+          
+          /> -->
+          <K-Input-Search v-decorator="['memberId',{valuePropName:'value'}]" ref="kmember" />
         </a-form-item>
         <a-form-item label="入場時間" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择入場時間" v-decorator="['startTime']" :trigger-change="true" style="width: 100%"/>
@@ -35,10 +40,12 @@
         </a-form-item>
 
         <a-form-item label="我が社営業担当" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="['chargerName']" placeholder="営業担当者..."></a-input>
+          <!-- <a-input v-decorator="['chargerName']" placeholder="営業担当者..."></a-input> -->
+          <member-pop 
+          v-decorator="['chargerId']" 
+          :initVal="model.chargerName" 
+          />
         </a-form-item>
-
-
 
       </a-form>
     </a-spin>
@@ -53,13 +60,17 @@
   import JDate from '@/components/jeecg/JDate'  
   import ProjectPop from '@/views/issohadmin/components/ProjectPop/ProjectPop'
   import ContactorPop from '@/views/issohadmin/components/ContactorPop/ContactorPop'
+  import MemberPop from '../../components/MemberPop/MemberPop'
+  import KInputSearch from '../../components/KInputSearch'
 
   export default {
     name: "IssohMemberArrangeModal",
     components: { 
       JDate,
       ProjectPop,
-      ContactorPop
+      ContactorPop,
+      MemberPop,
+      KInputSearch
     },
     data () {
       return {
@@ -80,7 +91,7 @@
         validatorRules: {
           memberName: {
             rules: [
-              { required: true, message: '请输入社員名前!'},
+              { required: true, message: '社員名が必須です!'},
             ]
           },
         },
@@ -101,7 +112,12 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'memberName','startTime','endTimePlan','endTime','evaluateRemarks','projectId'))
+          var pickedVals = pick(this.model,
+                'memberId','memberName','startTime',
+                'endTimePlan','endTime','evaluateRemarks',
+                'projectId','chargerId')
+          console.log(pickedVals)
+          this.form.setFieldsValue(pickedVals)
         })
       },
       close () {
@@ -111,9 +127,10 @@
       handleOk () {
         const that = this;
         // 触发表单验证
+        this.form.getFieldsValue()
         this.form.validateFields((err, values) => {
           if (!err) {
-            that.confirmLoading = true;
+            // that.confirmLoading = true;
             let httpurl = '';
             let method = '';
             if(!this.model.id){
@@ -126,6 +143,7 @@
             let formData = Object.assign(this.model, values);
             // formData.projectId = formData.departIds
             console.log("表单提交数据",formData)
+            return;
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
                 that.$message.success(res.message);

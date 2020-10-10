@@ -35,3 +35,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     refresh-mapper: true
+
+googlemap:
+  apikey: AIzaSyAOvK5GaadDM1YnVpSIwBHdElurgwCxfCg

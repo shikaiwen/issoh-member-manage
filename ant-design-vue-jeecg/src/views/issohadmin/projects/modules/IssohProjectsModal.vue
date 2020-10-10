@@ -14,6 +14,8 @@
         <a-form-item label="プロジェクト名" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="['name', validatorRules.name]" placeholder="请输入プロジェクト名"></a-input>
         </a-form-item>
+
+
         <a-form-item label="案件情報" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-textarea v-decorator="['proDesc']" rows="4" placeholder="请输入案件情報"/>
         </a-form-item>
@@ -61,14 +63,15 @@
   import JDate from '@/components/jeecg/JDate'  
   import CompanyPop from "@/views/issohadmin/components/CompanyPop/CompanyPop"
 
-import ContactorPop from '@/views/issohadmin/components/ContactorPop/ContactorPop'
-
+  import ContactorPop from '@/views/issohadmin/components/ContactorPop/ContactorPop'
+  import MemberSelect from '../../components/MemberSelect/MemberSelect'
   export default {
     name: "IssohProjectsModal",
     components: { 
       JDate,
       CompanyPop,
-      ContactorPop
+      ContactorPop,
+      MemberSelect
     },
     data () {
       return {

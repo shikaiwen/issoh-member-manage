@@ -21,7 +21,7 @@ import org.jeecg.modules.issohadmin.memberarrange.vo.IssohMemberArrangeVo;
  */
 public interface IssohMemberArrangeMapper extends BaseMapper<IssohMemberArrange> {
 
-    public Page<IssohMemberArrange> mySelectPage(Page<IssohMemberArrange> page,
+    public Page<IssohMemberArrangeVo> mySelectPage(Page<IssohMemberArrange> page,
                                                    @Param(Constants.WRAPPER) QueryWrapper queryWrapper, @Param("extraParam") Map extraParam
     );
 

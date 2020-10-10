@@ -57,7 +57,7 @@ public class KevinTest {
 		Page<IssohMemberArrange> page = new Page<>(1, 10);
 
 		QueryWrapper<IssohMemberArrange> queryWrapper = new QueryWrapper<>();
-		Page<IssohMemberArrange> issohContactorVoPage = issohMemberArrangeMapper.mySelectPage(page, queryWrapper, null);
+		Page<IssohMemberArrangeVo> issohContactorVoPage = issohMemberArrangeMapper.mySelectPage(page, queryWrapper, null);
 
 //		Page<IssohAssets> issohAssetsPage = issohAssetsMapper.mySelectPage(page, queryWrapper, Collections.emptyMap());
 //		issohAssetsPage.getRecords().forEach(System.out::println);

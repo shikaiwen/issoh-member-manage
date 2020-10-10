@@ -34,10 +34,10 @@ public class IssohMemberArrange implements Serializable {
 	/**主键*/
 	@TableId(type = IdType.ID_WORKER_STR)
     @ApiModelProperty(value = "主键")
-    private java.lang.String id;
+    private String id;
 	/**创建人*/
     @ApiModelProperty(value = "创建人")
-    private java.lang.String createBy;
+    private String createBy;
 	/**创建日期*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -45,7 +45,7 @@ public class IssohMemberArrange implements Serializable {
     private java.util.Date createTime;
 	/**更新人*/
     @ApiModelProperty(value = "更新人")
-    private java.lang.String updateBy;
+    private String updateBy;
 	/**更新日期*/
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -53,15 +53,12 @@ public class IssohMemberArrange implements Serializable {
     private java.util.Date updateTime;
 	/**所属部门*/
     @ApiModelProperty(value = "所属部门")
-    private java.lang.String sysOrgCode;
+    private String sysOrgCode;
 	/**社員ID*/
 	@Excel(name = "社員ID", width = 15)
     @ApiModelProperty(value = "社員ID")
-    private java.lang.String memberId;
-	/**社員名前*/
-	@Excel(name = "社員名前", width = 15)
-    @ApiModelProperty(value = "社員名前")
-    private java.lang.String memberName;
+    private String memberId;
+
 	/**入場時間*/
 	@Excel(name = "入場時間", width = 15, format = "yyyy-MM-dd")
 	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
@@ -83,9 +80,12 @@ public class IssohMemberArrange implements Serializable {
 	/**顧客評価備考*/
 	@Excel(name = "顧客評価備考", width = 15)
     @ApiModelProperty(value = "顧客評価備考")
-    private java.lang.String evaluateRemarks;
+    private String evaluateRemarks;
 	/**プロジェクトID*/
-	@Excel(name = "プロジェクトID", width = 15)
     @ApiModelProperty(value = "プロジェクトID")
-    private java.lang.String projectId;
+    private String projectId;
+	
+	/**我が社営業担当ID*/
+	private java.lang.String chargerId;
+
 }
