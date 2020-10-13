@@ -62,6 +62,10 @@ export const JeecgListMixin = {
   },
   methods:{
     loadData(arg) {
+      if(typeof(this.beforeLoadData) == "function"){
+        this.beforeLoadData()
+      }
+      
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
         return
@@ -70,6 +74,8 @@ export const JeecgListMixin = {
       if (arg === 1) {
         this.ipagination.current = 1;
       }
+
+
       var params = this.getQueryParams();//查询条件
       this.loading = true;
       getAction(this.url.list, params).then((res) => {

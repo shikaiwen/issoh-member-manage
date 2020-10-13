@@ -1,7 +1,7 @@
 <template>
 
 <a-modal
-    title="选择部门"
+    title="会社一覧"
     :width="modalWidth"
     :visible="visible"
     @ok="handleSubmit"

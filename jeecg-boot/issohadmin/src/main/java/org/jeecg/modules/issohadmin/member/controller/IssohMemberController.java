@@ -1,9 +1,6 @@
 package org.jeecg.modules.issohadmin.member.controller;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,6 +26,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 
 import org.jeecg.modules.issohadmin.member.vo.IssohMemberVo;
+import org.jeecg.modules.issohadmin.resume.entity.IssohResume;
+import org.jeecg.modules.issohadmin.resume.mapper.IssohResumeMapper;
+import org.jeecg.modules.issohadmin.resume.service.IIssohResumeService;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -61,17 +61,41 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 
 	 @Resource
 	 IssohMemberMapper issohMemberMapper;
+	 @Resource
+	 IssohResumeMapper issohResumeMapper;
 
 	 @Resource
 	 MapService mapService;
+	 @Resource
+	 IIssohResumeService iIssohResumeService;
 
 	 @GetMapping(value = "/loadMemberForGoogleMap")
 	 @ResponseBody
-	 public Object loadMemberForMap() {
+	 public Object loadMemberForMap(@RequestParam(required = false) String words) {
+
+		 List<IssohMember> issohMembers = null;
+
 		 QueryWrapper<IssohMember> queryWrapper = new QueryWrapper<>();
-		 List<IssohMember> issohMembers = issohMemberMapper.selectList(queryWrapper);
+		 if (StringUtils.isNotEmpty(words)) {
+			 QueryWrapper<IssohResume> resumeQueryWrapper = new QueryWrapper<>();
+			 resumeQueryWrapper.like("search_skills",words);
+			 List<IssohResume> issohResumes = issohResumeMapper.selectList(resumeQueryWrapper);
+			 List<String> memberIds = issohResumes.stream().map(issohResume -> issohResume.getMemberId()).collect(Collectors.toList());
+			 queryWrapper.in("id", memberIds.toArray());
+			 issohMembers = issohMemberMapper.selectList(queryWrapper);
+
+		 }else{
+			 issohMembers = issohMemberMapper.selectList(queryWrapper);
+		 }
+
 		 issohMembers = issohMembers.stream().filter(m -> m.getAddressLat() != null).collect(Collectors.toList());
-		return Result.ok(issohMembers);
+
+		 issohMembers.stream().forEach(member -> {
+			 IssohResume resume = iIssohResumeService.findByMemberId(member.getId());
+			 member.setIssohResume(resume);
+		 });
+
+		 return Result.ok(issohMembers);
 	 }
 
 
@@ -110,8 +134,9 @@ public class IssohMemberController extends JeecgController<IssohMember, IIssohMe
 
 		QueryWrapper<IssohMember> queryWrapper = new QueryWrapper<>();
 		queryWrapper.setTableAlias("a");
+		Map<String, String> extraMap = new HashMap<>();
+		extraMap.put("companyName", req.getParameter("companyName"));
 
-		Map<String, String> extraMap = Collections.emptyMap();
 //				Collections.singletonMap("realname", req.getParameter("realname"));
 		QueryGenerator.initQueryWrapperAlias(issohMember, req.getParameterMap(),queryWrapper);
 //		QueryWrapper<IssohAssets> queryWrapper = QueryGenerator.initQueryWrapper(issohAssets, req.getParameterMap());

@@ -2,13 +2,17 @@
   <a-card :bordered="false">
     <!-- 查询区域 -->
 
-
    <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="社員名前">
-              <a-input placeholder="请输入社員名前" v-model="queryParam.realName"></a-input>
+              <a-input placeholder="社員名前" v-model="queryParam.realName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="所属会社">
+              <a-input placeholder="所属会社" v-model="queryParam.companyName"></a-input>
             </a-form-item>
           </a-col>
           <a-col :xl="10" :lg="11" :md="12" :sm="24">
@@ -32,9 +36,7 @@
       </a-form>
     </div>
 
-
     <!-- 查询区域-END -->
-    
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -43,6 +45,8 @@
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
+      <a-button type="primary" icon="edit" @click="editResume">履歴書編集</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('社員')">履歴書アウトプット</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -110,8 +114,11 @@
       </a-table>
     </div>
 
-    <issohMember-modal ref="modalForm" @ok="modalFormOk"></issohMember-modal>
+    <issohMember-modal :width="1300" ref="modalForm" @ok="modalFormOk"></issohMember-modal>
     <issohMember-map ref="modalMap"></issohMember-map>
+
+    <issoh-resume-modal ref="resumeModal"></issoh-resume-modal>
+    
   </a-card>
 </template>
 
@@ -125,29 +132,32 @@
   import JDate from '@/components/jeecg/JDate.vue'
   import IssohMemberMap from './modules/IssohMemberMap'
 
+  import IssohResumeModal from '@/views/issohadmin/resume/modules/IssohResumeModal'
+
   export default {
     name: "IssohMemberList",
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       IssohMemberModal,
       JDate,
-      IssohMemberMap
+      IssohMemberMap,
+      IssohResumeModal,
     },
     data () {
       return {
         description: '社員管理页面',
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:60,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
+          // {
+          //   title: '#',
+          //   dataIndex: '',
+          //   key:'rowIndex',
+          //   width:60,
+          //   align:"center",
+          //   customRender:function (t,r,index) {
+          //     return parseInt(index)+1;
+          //   }
+          // },
           {
             title:'社員番号',
             align:"center",
@@ -252,6 +262,11 @@
       },
     },
     methods: {
+      editResume(){
+          if(this.selectionRows.length <1)return;
+          var record = this.selectionRows[0]
+          this.$refs.resumeModal.memberPageEdit(record)
+      },
       showMemberMap(){
         this.$refs.modalMap.add()
       },

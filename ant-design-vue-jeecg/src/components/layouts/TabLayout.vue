@@ -1,8 +1,10 @@
 <template>
   <global-layout @dynamicRouterShow="dynamicRouterShow">
+
     <!-- update-begin- author:sunjianlei --- date:20191009 --- for: 提升右键菜单的层级 -->
     <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" style="z-index: 9999;" @select="onMenuSelect"/>
     <!-- update-end- author:sunjianlei --- date:20191009 --- for: 提升右键菜单的层级 -->
+
     <a-tabs
       @contextmenu.native="e => onContextmenu(e)"
       v-if="multipage"
@@ -18,6 +20,7 @@
         <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
       </a-tab-pane>
     </a-tabs>
+
     <div style="margin: 12px 12px 0;">
       <transition name="page-toggle">
         <keep-alive v-if="multipage">
@@ -164,16 +167,15 @@
 
       // update-begin-author:sunjianlei date:20200120 for: 动态更改页面标题
       changeTitle(title) {
-        let projectTitle = "Jeecg-Boot 企业级快速开发平台"
+        let projectTitle = "Jeecg-Boot 企业级快速开发平台";
         // 首页特殊处理
         if (this.$route.path === indexKey) {
-          document.title = projectTitle
+          document.title = projectTitle;
         } else {
-          document.title = title + ' · ' + projectTitle
+          document.title = title + ' · ' + projectTitle;
         }
       },
       // update-end-author:sunjianlei date:20200120 for: 动态更改页面标题
-
       changePage(key) {
         this.activePage = key
       },
@@ -186,6 +188,7 @@
         this[action](key)
       },
       remove(key) {
+        
         if (key == indexKey) {
           this.$message.warning('首页不能关闭!')
           return
@@ -194,7 +197,7 @@
           this.$message.warning('这是最后一页，不能再关闭了啦')
           return
         }
-        console.log("this.pageList ",this.pageList );
+        console.log("this.pageList ",this.pageList);
         this.pageList = this.pageList.filter(item => item.fullPath !== key)
         let index = this.linkList.indexOf(key)
         this.linkList = this.linkList.filter(item => item !== key)

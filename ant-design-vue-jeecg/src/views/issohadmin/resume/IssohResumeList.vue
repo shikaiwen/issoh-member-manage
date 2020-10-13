@@ -4,24 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="会社名">
-              <a-input placeholder="会社名..." v-model="queryParam.companyName"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="名前">
-              <a-input placeholder="名前を入力してください" v-model="queryParam.name"></a-input>
-            </a-form-item>
-          </a-col>
-
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-            </span>
-          </a-col>
-
         </a-row>
       </a-form>
     </div>
@@ -30,7 +12,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('連絡情報')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('履歴書')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -101,7 +83,7 @@
       </a-table>
     </div>
 
-    <issohContactor-modal ref="modalForm" @ok="modalFormOk"></issohContactor-modal>
+    <issohResume-modal ref="modalForm" @ok="modalFormOk"></issohResume-modal>
   </a-card>
 </template>
 
@@ -110,65 +92,48 @@
   import '@/assets/less/TableExpand.less'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import IssohContactorModal from './modules/IssohContactorModal'
+  import IssohResumeModal from './modules/IssohResumeModal'
 
   export default {
-    name: "IssohContactorList",
+    name: "IssohResumeList",
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      IssohContactorModal
+      IssohResumeModal
     },
     data () {
       return {
-        description: '連絡情報管理页面',
+        description: '履歴書管理页面',
         // 表头
         columns: [
-          // {
-          //   title: '',
-          //   dataIndex: '',
-          //   key:'rowIndex',
-          //   width:60,
-          //   align:"center",
-          //   customRender:function (t,r,index) {
-          //     return parseInt(index)+1;
-          //   }
-          // },
           {
-            title:'所属会社',
+            title: '#',
+            dataIndex: '',
+            key:'rowIndex',
+            width:60,
             align:"center",
-            dataIndex: 'companyName'
+            customRender:function (t,r,index) {
+              return parseInt(index)+1;
+            }
           },
           {
-            title:'名前',
+            title:'社員ID',
             align:"center",
-            dataIndex: 'name'
+            dataIndex: 'memberId'
           },
           {
-            title:'職務',
+            title:'社員名前',
             align:"center",
-            dataIndex: 'positionName'
+            dataIndex: 'memberName'
           },
           {
-            title:'携帯番号',
+            title:'社員コード',
             align:"center",
-            dataIndex: 'mobile'
+            dataIndex: 'memberCode'
           },
           {
-            title:'メール',
+            title:'履歴情報',
             align:"center",
-            dataIndex: 'email'
-          },
-          {
-            title:'電話番号',
-            align:"center",
-            dataIndex: 'tel'
-          },
-
-          {
-            title:'名刺',
-            align:"center",
-            dataIndex: 'businessCards',
-            scopedSlots: {customRender: 'imgSlot'}
+            dataIndex: 'config'
           },
           {
             title: '操作',
@@ -180,11 +145,11 @@
           }
         ],
         url: {
-          list: "/contactor/issohContactor/list",
-          delete: "/contactor/issohContactor/delete",
-          deleteBatch: "/contactor/issohContactor/deleteBatch",
-          exportXlsUrl: "/contactor/issohContactor/exportXls",
-          importExcelUrl: "contactor/issohContactor/importExcel",
+          list: "/resume/issohResume/list",
+          delete: "/resume/issohResume/delete",
+          deleteBatch: "/resume/issohResume/deleteBatch",
+          exportXlsUrl: "/resume/issohResume/exportXls",
+          importExcelUrl: "resume/issohResume/importExcel",
         },
         dictOptions:{},
       }
@@ -196,12 +161,6 @@
     },
     methods: {
       initDictConfig(){
-      },
-      afterGetQueryParams(params){
-          if(params.name){
-            params.name = `*${params.name}*`;
-          }
-          console.log("customize params....")
       }
     }
   }

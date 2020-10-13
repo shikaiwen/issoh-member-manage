@@ -119,24 +119,36 @@
       </a-table>
     </div>
 
-    <issohProjects-modal ref="modalForm" @ok="modalFormOk"></issohProjects-modal>
+    <issohProjects-modal :width="1300" ref="modalForm" @ok="modalFormOk"></issohProjects-modal>
   </a-card>
 </template>
 
 <script>
-
   import '@/assets/less/TableExpand.less'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import IssohProjectsModal from './modules/IssohProjectsModal'
-
 
   export default {
     name: "IssohProjectsList",
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       IssohProjectsModal,
-      
+    },
+    created(){
+          console.log("created ....")
+          let name = this.$route.query.name;
+          console.log(name)
+          this.queryParam.name = name;
+    },
+    watch: {
+      $route: {
+        immediate: true,
+        handler() {
+          // console.log('============= online href  $route props ============= ');
+          // console.log('$route projectName: ', name);
+        }
+      }
     },
     data () {
       return {
@@ -152,6 +164,12 @@
             customRender:function (t,r,index) {
               return parseInt(index)+1;
             }
+          },
+          {
+            title:'案件コード',
+            align:"center",
+            dataIndex: 'code',
+            width:100,
           },
           {
             title:'案件名',
@@ -229,6 +247,13 @@
       },
     },
     methods: {
+
+      beforeLoadData(){
+        if(this.$route.query.name){
+          this.queryParam.name = this.$route.query.name;
+        }
+      },
+
       afterGetQueryParams(params){
         if(params.name){
           params.name = `*${params.name}*`;

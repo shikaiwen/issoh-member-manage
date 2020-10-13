@@ -67,6 +67,7 @@
     },
     methods: {
       onSelect (obj) {
+        console.log("menu clicked...")
         this.$emit('menuSelect', obj)
       }
     }

@@ -93,8 +93,17 @@
       }
     },
     methods:{
+      initVal(id,text){
+        if(!id){
+          this.contactorIds = "";
+          this.showValues = "";
+        }else{
+          this.contactorIds = id;
+          this.showValues = text;
+        }
+      },
       initComp(departNames){
-        this.departNames = departNames
+        // this.departNames = departNames
       },
       openModal(){
         // this.$refs.innerModal.show()

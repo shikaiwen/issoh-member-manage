@@ -4,13 +4,14 @@
       show-search
       allow-clear
       :value="value"
-      placeholder="input search text"
-      style="width: 200px"
+      :placeholder="placeholder"
+      style="width: 100%"
       :default-active-first-option="false"
       :show-arrow="false"
       :filter-option="false"
       :not-found-content="null"
       @search="handleSearch"
+      @inputKeydown="inputKeydown"
       @change="handleChange"
     >
       <a-select-option v-for="d in data" :key="d.key">
@@ -32,6 +33,13 @@ let currentValue;
 
 export default {
   name: "KInputSearch",
+  props: {
+      placeholder: {
+        type: String,
+        default: '検索内容を入力してください'
+      },
+
+  },
   data() {
     return {
       data: [],
@@ -41,14 +49,23 @@ export default {
   },
   methods: {
 
+    inputKeydown(evt){
+      // if(evt.keyCode == 13){
+      //   this.handleChange(evt.target.value)
+      // }
+    },
     // onSelect(value, option){
     //     console.log(value)
     // },
     // 直接プルダウンのその値を設置します
     setValue(row) {
-      this.data = [row];
+      if(!row.key){
+        this.data = []
+      }else{
+        this.data = [row];
+      }
       this.key = row.key;
-    //   this.value = row.text;
+      this.value = row.key;
     },
     btnClick() {
       alert("ok");

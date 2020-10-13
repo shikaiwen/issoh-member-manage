@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.issohadmin.member.entity.IssohMember;
 import org.jeecg.modules.issohadmin.projects.entity.IssohProjects;
 import org.jeecg.modules.issohadmin.projects.mapper.IssohProjectsMapper;
 import org.jeecg.modules.issohadmin.projects.service.IIssohProjectsService;
@@ -53,6 +54,25 @@ public class IssohProjectsController extends JeecgController<IssohProjects, IIss
 
 	@Autowired
 	 IssohProjectsMapper mapper;
+
+	 /**
+	  * input search component
+	  * @param entity
+	  * @param q
+	  * @param request
+	  * @return
+	  */
+	 @GetMapping(value = "/search")
+	 @ResponseBody
+	 public Object searchMember(IssohProjects entity, @RequestParam String q, HttpServletRequest request) {
+		 QueryWrapper<IssohProjects> queryWrapper = new QueryWrapper<>();
+//		 QueryGenerator.initQueryWrapperAlias(issohMember, request.getParameterMap(),queryWrapper);
+		 queryWrapper.like("name",q);
+		 List<IssohProjects> entityList = mapper.selectList(queryWrapper);
+		 return Result.ok(entityList);
+	 }
+
+
 	/**
 	 * 分页列表查询
 	 *

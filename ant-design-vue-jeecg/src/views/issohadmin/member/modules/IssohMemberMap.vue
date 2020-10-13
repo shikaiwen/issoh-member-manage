@@ -10,6 +10,20 @@
     @cancel="handleCancel"
     cancelText="关闭">
 
+<a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="24">
+              <a-col :xl="6" :lg="7" :md="8" :sm="24">
+                <a-form-item label="人材検索" style="width:100%;">
+                  <a-input placeholder="例:java,c#..." v-model="queryParam.words"></a-input>
+              </a-form-item>
+              </a-col>
+
+              <a-col :xl="6" :lg="7" :md="8" :sm="24">
+                <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              </a-col>
+            </a-row>
+
+</a-form>
         <!--The div element for the map -->
          <!-- <div id="map"></div> -->
 <!-- :options="{streetViewControl: false}" -->
@@ -48,17 +62,16 @@
   <tr>
     <td rowspan="2">
       
-      <img :src="'http://127.0.0.1:8080/jeecg-boot/sys/common/static/'+ infoMember.image"
-      onerror="this.onerror=null;this.src='https://studio.kitamura.jp/service/images/img_id_02.jpg';"
+      <img :src="infoMember.image ? `http://127.0.0.1:8080/jeecg-boot/sys/common/static/${infoMember.image}` : 'https://studio.kitamura.jp/service/images/img_id_02.jpg'"
       >
       
     </td>
-    <td>名前:{{infoMember.realName}}</td>
-    <td>年齢:30</td>
+    <td>名前:{{infoMember.realName}},{{infoMember.code}}</td>
+    <td>住所:{{infoMember.address}}</td>
   </tr>
     <tr>
       <td colspan="2">
-        スキル：Java,Javascript,Vue,Spring,C,C++,Python,Php
+        スキル：{{infoMember.issohResume? infoMember.issohResume.searchSkills : ""}}
       </td>
 
   </tr>
@@ -97,7 +110,7 @@
 <script>
 
   import {gmapApi} from 'vue2-google-maps'
-  import { httpAction } from '@/api/manage'
+  import { httpAction,getAction } from '@/api/manage'
   import pick from 'lodash.pick'
   import { validateDuplicateValue } from '@/utils/util'
   import JDate from '@/components/jeecg/JDate'  
@@ -107,6 +120,7 @@
 
   import CompanyPop from "@/views/issohadmin/components/CompanyPop/CompanyPop"
   import { Loader } from '@googlemaps/js-api-loader';
+  import _ from "lodash"
 
 
 /**
@@ -114,7 +128,6 @@
  * http://xkjyeah.github.io/vue-google-maps/
  *  
  * */ 
-
 
   export default {
     name: "IssohMemberMap",
@@ -125,31 +138,11 @@
       google: gmapApi
     },
     created(){
-      const that = this;
-        httpAction("/member/issohMember/loadMemberForGoogleMap",{},"get").then((res)=>{
-          if(res.success){
-            that.$message.success(res.message);
-            that.$emit('ok');
-            res.result.forEach(elt => {
-              that.map.markers.push({
-                position:{lat:elt.addressLat, lng: elt.addressLng},
-                member:elt
-                
-                })
-              
-            });
-          }else{
-            that.$message.warning(res.message);
-          }
-        }).finally(() => {
-          that.confirmLoading = false;
-          that.close();
-        })
-
-
+      this.searchQuery()
     },
     data () {
       return {
+        queryParam:{},
         map:{
           mapTypeId:"terrain",
           markers:[
@@ -157,7 +150,8 @@
           ]
           
         },
-
+      
+      memberList:[],
       infoOptions: {
         pixelOffset: {
           width: 0,
@@ -180,10 +174,36 @@
     },
 
     methods: {
-      makerClick(marker){
+      searchQuery(){
 
+          const that = this;
+          var param = Object.assign({}, this.queryParam);
+          // TODO httpActionがダメだったわけを調べる
+          getAction("/member/issohMember/loadMemberForGoogleMap",param).then((res)=>{
+            if(res.success){
+              // that.$message.success(res.message);
+              that.$emit('ok');
+              // _.remove(that.map.markers);
+              that.map.markers.splice(0,that.map.markers.length)
+              res.result.forEach(elt => {
+                that.map.markers.push({
+                  position:{lat:elt.addressLat, lng: elt.addressLng},
+                  member:elt
+                  })
+              });
+
+              this.memberList = res.result;
+            }else{
+              that.$message.warning(res.message);
+            }
+          }).finally(() => {
+            // that.confirmLoading = false;
+            // that.close();
+          })
+      },
+
+      makerClick(marker){
       var contentString = 
-          
             ` 
 <table class="personInfoTb">
   <tr>

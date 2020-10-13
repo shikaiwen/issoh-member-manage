@@ -35,6 +35,18 @@ public class IssohProjects implements Serializable {
 	@TableId(type = IdType.ID_WORKER_STR)
     @ApiModelProperty(value = "主键")
     private java.lang.String id;
+
+
+    /**プロジェクト名*/
+    @Excel(name = "プロジェクト名", width = 15)
+    @ApiModelProperty(value = "プロジェクト名")
+    private java.lang.String name;
+
+
+    @Excel(name = "プロジェクトコード", width = 15)
+    @ApiModelProperty(value = "プロジェクトコード")
+    private java.lang.String code;
+
 	/**创建人*/
     @ApiModelProperty(value = "创建人")
     private java.lang.String createBy;
@@ -54,10 +66,12 @@ public class IssohProjects implements Serializable {
 	/**所属部门*/
     @ApiModelProperty(value = "所属部门")
     private java.lang.String sysOrgCode;
-	/**プロジェクト名*/
-	@Excel(name = "プロジェクト名", width = 15)
-    @ApiModelProperty(value = "プロジェクト名")
-    private java.lang.String name;
+
+
+
+
+
+
 	/**案件情報*/
 	@Excel(name = "案件情報", width = 15)
     @ApiModelProperty(value = "案件情報")

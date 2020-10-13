@@ -93,7 +93,11 @@
         // 如果全屏就将top设为 0
         if (this.innerFullscreen) {
           style['top'] = '0'
+        }else{
+          style.top = '10px';
         }
+
+
         return style
       },
       isNoTitle() {

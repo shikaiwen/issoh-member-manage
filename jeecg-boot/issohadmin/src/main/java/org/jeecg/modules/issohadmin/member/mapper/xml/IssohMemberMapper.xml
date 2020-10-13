@@ -14,7 +14,10 @@
         where 1=1
 
         <if test="extraParam.realname != null ">
-            and b.realname like concat('%', #{extraParam.realname} ,'%')
+            and a.realname like concat('%', #{extraParam.realname} ,'%')
+        </if>
+        <if test="extraParam.companyName != null and extraParam.companyName != '' ">
+            and b.name like concat('%', #{extraParam.companyName} ,'%')
         </if>
 
 

@@ -18,7 +18,7 @@
           <a-input v-decorator="['positionName']" placeholder="请输入職務"></a-input>
         </a-form-item>
         <a-form-item label="携帯番号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input v-decorator="['mobile', validatorRules.mobile]" placeholder="请输入携帯番号"></a-input>
+          <a-input v-decorator="['mobile']" placeholder="请输入携帯番号"></a-input>
         </a-form-item>
         <a-form-item label="電話番号" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="['tel', validatorRules.tel]" placeholder="请输入電話番号"></a-input>

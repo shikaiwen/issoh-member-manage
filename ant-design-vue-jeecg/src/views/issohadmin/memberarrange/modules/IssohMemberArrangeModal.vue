@@ -12,12 +12,8 @@
       <a-form :form="form">
 
         <a-form-item label="社員名前" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <!-- <a-input v-decorator="['memberName', validatorRules.memberName]" placeholder="请输入社員名前"></a-input> -->
-          <!-- <member-pop v-decorator="['memberId',validatorRules.memberName]"
-          :initVal="model.memberName" 
-          
-          /> -->
-          <K-Input-Search v-decorator="['memberId',{valuePropName:'value'}]" ref="kmember" />
+       
+          <KInput-MemberSearch ref="kmember" v-decorator="['memberId',{valuePropName:'value'}]"  />
         </a-form-item>
         <a-form-item label="入場時間" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-date placeholder="请选择入場時間" v-decorator="['startTime']" :trigger-change="true" style="width: 100%"/>
@@ -32,19 +28,25 @@
           <a-textarea v-decorator="['evaluateRemarks']" rows="4" placeholder="请输入顧客評価備考"/>
         </a-form-item>
         <a-form-item label="プロジェクト" :labelCol="labelCol" :wrapperCol="wrapperCol">
-<!-- <a-input v-decorator="['projectId']" placeholder="请输入プロジェクトID"></a-input> -->
-<!-- <company-pop v-decorator="['departIds']" :initVal="model.companyName" :modal-width="1000" /> -->
-          <project-pop v-decorator="['projectId',{valuePropName:'departIds'}]" 
+
+          <!-- <a-input v-decorator="['projectId']" placeholder="请输入プロジェクトID"></a-input> -->
+          <!-- <company-pop v-decorator="['departIds']" :initVal="model.companyName" :modal-width="1000" /> -->
+          <!-- <project-pop v-decorator="['projectId',{valuePropName:'departIds'}]" 
           :initVal="model.projectName" 
-          :modal-width="1200"></project-pop>
+          :modal-width="1200"></project-pop> -->
+
+          <KInput-ProjectSearch ref="kproject" v-decorator="['projectId',{valuePropName:'value'}]"  />
+
         </a-form-item>
 
         <a-form-item label="我が社営業担当" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <!-- <a-input v-decorator="['chargerName']" placeholder="営業担当者..."></a-input> -->
-          <member-pop 
+          <!-- <member-pop 
           v-decorator="['chargerId']" 
           :initVal="model.chargerName" 
-          />
+          /> -->
+        <KInput-MemberSearch ref="chargerCp" v-decorator="['chargerId',{valuePropName:'value'}]"  />
+
         </a-form-item>
 
       </a-form>
@@ -61,7 +63,8 @@
   import ProjectPop from '@/views/issohadmin/components/ProjectPop/ProjectPop'
   import ContactorPop from '@/views/issohadmin/components/ContactorPop/ContactorPop'
   import MemberPop from '../../components/MemberPop/MemberPop'
-  import KInputSearch from '../../components/KInputSearch'
+  import KInputMemberSearch from '../../components/KInputMemberSearch'
+  import KInputProjectSearch from '../../components/KInputProjectSearch'
 
   export default {
     name: "IssohMemberArrangeModal",
@@ -70,7 +73,8 @@
       ProjectPop,
       ContactorPop,
       MemberPop,
-      KInputSearch
+      KInputMemberSearch,
+      KInputProjectSearch,
     },
     data () {
       return {
@@ -102,6 +106,10 @@
       }
     },
     created () {
+      this.$nextTick(()=>{
+        console.log("created,",this.$refs.kmember)
+
+      })
     },
     methods: {
       add () {
@@ -110,14 +118,23 @@
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
+
+
+        //
+
         this.visible = true;
         this.$nextTick(() => {
+
           var pickedVals = pick(this.model,
                 'memberId','memberName','startTime',
                 'endTimePlan','endTime','evaluateRemarks',
                 'projectId','chargerId')
           console.log(pickedVals)
           this.form.setFieldsValue(pickedVals)
+        this.$refs.kmember.setValue({key:this.model.memberId,text:this.model.memberName});
+        this.$refs.kproject.setValue({key:this.model.projectId,text:this.model.projectName});
+        this.$refs.chargerCp.setValue({key:this.model.chargerId,text:this.model.chargerName});
+
         })
       },
       close () {
@@ -143,7 +160,6 @@
             let formData = Object.assign(this.model, values);
             // formData.projectId = formData.departIds
             console.log("表单提交数据",formData)
-            return;
             httpAction(httpurl,formData,method).then((res)=>{
               if(res.success){
                 that.$message.success(res.message);

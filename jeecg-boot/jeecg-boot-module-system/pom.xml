@@ -11,6 +11,8 @@
 	</parent>
 
 	<repositories>
+
+
 		<repository>
 			<id>aliyun</id>
 			<name>aliyun Repository</name>
@@ -30,6 +32,15 @@
 	</repositories>
 	
 	<dependencies>
+
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.56</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.jeecgframework.boot</groupId>
 			<artifactId>jeecg-boot-base-common</artifactId>

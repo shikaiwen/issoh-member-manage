@@ -17,6 +17,12 @@
         <a-form-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-input v-decorator="['realName', validatorRules.realName]" placeholder="请输入姓名"></a-input>
         </a-form-item>
+
+        <a-form-item label="所属会社" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <company-pop ref="companyPop" v-decorator="['departIds',{valuePropName:'departIds'}]"  :modal-width="1000" />
+
+        </a-form-item>
+
         <a-form-item label="写真" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <j-image-upload isMultiple v-decorator="['image']"></j-image-upload>
         </a-form-item>
@@ -50,16 +56,7 @@
           <a-textarea v-decorator="['remarks']" rows="4" placeholder="请输入備考"/>
         </a-form-item>
 
-        <a-form-item label="会社" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          
-          <company-pop v-decorator="['departIds']" :initVal="model.companyName" :modal-width="1000" />
 
-          <!-- <k-search-select-tag ref="CompanySearchTag"
-            placeholder="社名で検索"
-            v-model="model.companyId"
-            :async="true">
-          </k-search-select-tag> -->
-        </a-form-item>
 
       </a-form>
     </a-spin>
@@ -87,11 +84,16 @@
       KSearchSelectTag,
       CompanyPop
     },
+    props:{
+      width:{
+        type:Number,
+        default:1000
+      }
+    },
     data () {
       return {
         form: this.$form.createForm(this),
         title:"操作",
-        width:800,
         visible: false,
         model: {},
         labelCol: {
@@ -154,6 +156,9 @@
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'code','realName','image','sex','birthday','zaiCardImg','zaiCardNo','passportImg','passportNo','enterTime','remarks'))
+
+          // 所属会社
+          this.$refs.companyPop.initVal(this.model.companyId,this.model.companyName);
         })
       },
       close () {
